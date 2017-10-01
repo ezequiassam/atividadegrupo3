@@ -109,6 +109,29 @@ public class FuncionarioDAO extends AbstractDAO {
 		return funcionario;
 	}
 
+	// -- 5 - O nome e endereço dos funcionários do departamento de Informática, por
+	// ordem de nome.
+	public static List<Funcionario> findFuncionarioOnInformatica() throws ClassNotFoundException, SQLException {
+		List<Funcionario> funcionarios = new ArrayList<>();
+		String sql = "SELECT funcionario.nome, funcionario.endereco FROM funcionario \n"
+				+ "INNER JOIN departamento ON departamento.cod = funcionario.id_departamento\n"
+				+ "WHERE departamento.nome = 'Informatica' ORDER BY funcionario.nome";
+
+		PreparedStatement preparedStatement = getConnection().prepareStatement(sql);
+		ResultSet resultSet = preparedStatement.executeQuery();
+
+		while (resultSet.next()) {
+			String endereco = resultSet.getString("endereco");
+			String nome = resultSet.getString("nome");
+			Funcionario func = new Funcionario();
+			func.setEndereco(endereco);
+			func.setNome(nome);
+			funcionarios.add(func);
+		}
+		return funcionarios;
+
+	}
+
 	private static Funcionario convertResultSetToFuncionario(ResultSet resultSet)
 			throws SQLException, ClassNotFoundException {
 		Integer id = resultSet.getInt("id");
@@ -126,12 +149,36 @@ public class FuncionarioDAO extends AbstractDAO {
 		return funcionario;
 	}
 
+	// -- 8 - Os nomes dos departamentos e dos funcionários. Suas listagem devem
+	// incluir departamentos sem funcionários e funcionários sem departamento.
+	public static List<String> findDepartamentoAndFuncionario() throws SQLException, ClassNotFoundException {
+		List<String> lista = new ArrayList<>();
+		String sql = "	SELECT d.nome NOME_DEPARTAMENTO, f.nome FUNCIONARIO_DEPARTAMENTO\n"
+				+ "  FROM funcionario f LEFT JOIN departamento d ON f.id_departamento = d.cod\n"
+				+ "   	UNION SELECT  d.nome NOME_DEPARTAMENTO, f.nome FUNCIONARIO_DEPARTAMENTO\n"
+				+ "	FROM funcionario f RIGHT JOIN departamento d ON f.id_departamento = d.cod";
+
+		PreparedStatement preparedStatement = getConnection().prepareStatement(sql);
+		ResultSet resultSet = preparedStatement.executeQuery();
+
+		while (resultSet.next()) {
+			String departamento = resultSet.getString("NOME_DEPARTAMENTO");
+			String funcionario = resultSet.getString("FUNCIONARIO_DEPARTAMENTO");
+			String text = "Departamento: " + departamento + ", Funcionario: " + funcionario;
+			lista.add(text);
+		}
+		return lista;
+	}
+
 	// Deste m�todo serve apenas para "brincar" com os m�todos do DAO
-//	public static void main(String[] args) throws ClassNotFoundException, SQLException {
-//		Funcionario funcionario = new Funcionario(null, "manuela neiva", "abcd1235", "rua x",
-//				SituacaoFuncionarioEnum.ATIVO, 35000d, new Departamento("CTB", "Inform�tica", null));
-//		FuncionarioDAO.insert(funcionario);
-//		System.out.println(funcionario);
-//	}
+	// public static void main(String[] args) throws ClassNotFoundException,
+	// SQLException {
+	// Funcionario funcionario = new Funcionario(null, "manuela neiva", "abcd1235",
+	// "rua x",
+	// SituacaoFuncionarioEnum.ATIVO, 35000d, new Departamento("CTB", "Inform�tica",
+	// null));
+	// FuncionarioDAO.insert(funcionario);
+	// System.out.println(funcionario);
+	// }
 
 }
