@@ -170,15 +170,28 @@ public class FuncionarioDAO extends AbstractDAO {
 		return lista;
 	}
 
-	// Deste m�todo serve apenas para "brincar" com os m�todos do DAO
-	// public static void main(String[] args) throws ClassNotFoundException,
-	// SQLException {
-	// Funcionario funcionario = new Funcionario(null, "manuela neiva", "abcd1235",
-	// "rua x",
-	// SituacaoFuncionarioEnum.ATIVO, 35000d, new Departamento("CTB", "Inform�tica",
-	// null));
-	// FuncionarioDAO.insert(funcionario);
-	// System.out.println(funcionario);
-	// }
+	// -- 13- v_funcionarios_ativos: código e nome do departamento, id, nome,
+	// endereço, cpf e salário dos funcionários ativos.
+	public static List<String> viewFuncionariosAtivos() throws SQLException, ClassNotFoundException {
+		List<String> lista = new ArrayList<>();
+		String sql = "select * from funcionarios_ativos";
+
+		PreparedStatement preparedStatement = getConnection().prepareStatement(sql);
+		ResultSet resultSet = preparedStatement.executeQuery();
+
+		while (resultSet.next()) {
+			String cod = resultSet.getString("cod");
+			String departamento = resultSet.getString("nome_departamento");
+			Integer id = resultSet.getInt("funcionario_id");
+			String funcionario = resultSet.getString("funcionario_nome");
+			String cpf = resultSet.getString("funcionario_cpf");
+			String endereco = resultSet.getString("funcionario_endereco");
+			Double salario = resultSet.getDouble("funcionario_salario");
+			String text = "Cod Departamento:" + cod + ", Nome Departamento:" + departamento + ", Id Funcionario:" + id
+					+ ", Nome:" + funcionario + ", CPF:" + cpf + ", Endereço:" + endereco + ", Salario:" + salario;
+			lista.add(text);
+		}
+		return lista;
+	}
 
 }

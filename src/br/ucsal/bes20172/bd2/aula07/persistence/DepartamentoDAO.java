@@ -191,6 +191,25 @@ public class DepartamentoDAO extends AbstractDAO {
 		return lista;
 	}
 
+	// -- 11- Todas as combinações possíveis de nome de departamento e nome de
+	// funcionário.
+	public static List<String> findAllCombination() throws SQLException, ClassNotFoundException {
+		List<String> lista = new ArrayList<>();
+		String sql = "SELECT departamento.nome nomeDepartamento, funcionario.nome nomeFuncionario\n"
+				+ "FROM departamento CROSS JOIN funcionario";
+
+		PreparedStatement preparedStatement = getConnection().prepareStatement(sql);
+		ResultSet resultSet = preparedStatement.executeQuery();
+
+		while (resultSet.next()) {
+			String departamento = resultSet.getString("nomeDepartamento");
+			String funcionario = resultSet.getString("nomeFuncionario");
+			String text = "Departamento: " + departamento + ", Funcionario: " + funcionario;
+			lista.add(text);
+		}
+		return lista;
+	}
+
 	// public static Departamento findById(Integer id) throws SQLException,
 	// ClassNotFoundException {
 	// String query = SELECT_BASE_SQL + " where cod = ?";
@@ -206,20 +225,6 @@ public class DepartamentoDAO extends AbstractDAO {
 	// }
 	//
 	// return departamento;
-	// }
-
-	// Deste m�todo serve apenas para "brincar" com os m�todos do DAO
-	// public static void main(String[] args) throws SQLException,
-	// ClassNotFoundException {
-	// List<Departamento> departamentos = DepartamentoDAO.findAll();
-	// System.out.println("Todos departamentos:");
-	// for (Departamento departamento : departamentos) {
-	// System.out.println(departamento);
-	// }
-	//
-	// System.out.println("\n\nDepartamento com c�digo VND:");
-	// Departamento departamento = DepartamentoDAO.findByCod("VND");
-	// System.out.println(departamento);
 	// }
 
 }

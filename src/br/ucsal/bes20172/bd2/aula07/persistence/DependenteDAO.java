@@ -121,4 +121,25 @@ public class DependenteDAO extends AbstractDAO {
 		Dependente dependente = new Dependente(funcionario, seq, nome, grau);
 		return dependente;
 	}
+
+	// -- 14- v_dependentes: id, nome, endereço dos funcionários e nomes de seus
+	// dependentes.
+	public static List<String> viewDependentes() throws SQLException, ClassNotFoundException {
+		List<String> lista = new ArrayList<>();
+		String sql = "select * from dependentes";
+
+		PreparedStatement preparedStatement = getConnection().prepareStatement(sql);
+		ResultSet resultSet = preparedStatement.executeQuery();
+
+		while (resultSet.next()) {
+			Integer id = resultSet.getInt("funcionario_id");
+			String funcionario = resultSet.getString("funcionario_nome");
+			String endereco = resultSet.getString("funcionario_endereco");
+			String dependente = resultSet.getString("nome_dependente");
+			String text = "Id Funcionario:" + id + ", Nome:" + funcionario + ", Endereço:" + endereco + ", Dependente:"
+					+ dependente;
+			lista.add(text);
+		}
+		return lista;
+	}
 }
